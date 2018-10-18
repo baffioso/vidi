@@ -143,6 +143,7 @@ module.exports = {
     },
 
     handleSearch: function(searchTerm){
+
         let me = this;
         let wkt = matrWkt[searchTerm];
         let geojson = wktParser.parse(wkt);
@@ -165,11 +166,36 @@ module.exports = {
         mapObj.setView(point, 17);
 
         return new Promise(function(resolve, reject){
+          
+            // let matrnr = searchTerm.split(", ")[0];
+            // let url = 'http://gc2.frederiksberg.dk/api/v2/elasticsearch/search/frederiksberg/elasticsearch/bbr_enhed';
+            // let query = `{
+            //     "query":{
+            //         "match":{
+            //             "properties.matrnr": "${matrnr}"
+            //         }
+            //     }
+            // }`
+
+            // $.post(url, query, function(data) {
+            //     let res = data.hits.hits.map((item) => {
+            //         let it = item['_source']['properties'];                     
+            //         return it
+            //     });
+
+            //     let comp =  <div> 
+            //         <h3>Matrikler</h3>
+            //         <SearchList items={res} searcher='matrikel'/>
+            //     </div>;
+                
+            //     resolve(comp);
+            // },'json'); 
+
             let data = [searchTerm];
             let comp = <div> 
                 <h3>Matrikler</h3>
                 <SearchList items={data} searcher='matrikel'/>
-            </div>;
+            </div> 
 
             let resultLayer = new L.FeatureGroup();
 
