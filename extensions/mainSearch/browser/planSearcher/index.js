@@ -57,7 +57,7 @@ class SearchList extends React.Component{
         let me = this;
         searcher.handleSearch(e.target.id).then(function(fulfilled){
             let items = fulfilled.map((item) => {
-                return item.tekst.toString();
+                return item.id.toString();
             });
             me.setState({items : items});
         }); 

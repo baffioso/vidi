@@ -56,7 +56,7 @@ module.exports = {
     },
 
     init: function(){
-        utils.createMainTab(exId, __("Supersøger"), __("Search prototype...."), require('./../../../browser/modules/height')().max, "search"); 
+        utils.createMainTab(exId, __("Supersøger"), __("Søg på tværs af matrikler, adresser, lokalplandokumerter, GIS-temaer og andre kilder."), require('./../../../browser/modules/height')().max, "search"); 
 
         var currentSearcher = {};
 
@@ -333,14 +333,11 @@ module.exports = {
                 /*
                 TODO:
                 1. Set icons in search results
-
                 3. Set a primary searcher. preferably in config.js. Initially only show results
                    from the primary searcher and the list of searchers.
-
                    maybe by modifying getComponents to Render
                 
                 4. use debounce from master
-
                 4 Use the componentInCharge instead of searchReady for readability.
                 */
                /*

@@ -98,13 +98,7 @@ module.exports = {
                         }
                     ],
 
-                    "minimum_should_match": 1,
-
-                    "filter": [{
-                        "term": {
-                            "properties.meta.layer_search_include": true
-                        }
-                    }]
+                    "minimum_should_match": 1
                 }
             }
         };
