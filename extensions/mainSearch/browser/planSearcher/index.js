@@ -8,6 +8,7 @@ var React = require('react');;
 var ReactDOM = require('react-dom');
 
 import Business from '@material-ui/icons/Business';
+
 var cloud;
 
 var layerGroup = L.layerGroup();
@@ -57,7 +58,7 @@ class SearchList extends React.Component{
         let me = this;
         searcher.handleSearch(e.target.id).then(function(fulfilled){
             let items = fulfilled.map((item) => {
-                return item.id.toString();
+                return item.tekst.toString();
             });
             me.setState({items : items});
         }); 
@@ -143,13 +144,13 @@ module.exports = {
                 });
     
                 layerGroup.clearLayers();
-                console.log(layer);
                 layerGroup.addLayer(layer).addTo(mapObj);
                 mapObj.fitBounds(layer.getBounds());
                let comp = <div>
                    <ul className="list-group">
                     <li className="list-group-item">Plannavn : {properties.plannavn}</li>
                     <li className="list-group-item">Plannr   : {properties.plannr}</li>
+                    <li className="list-group-item">Anvendelse: {properties.anvendelsegenerel}</li>
                     <li className="list-group-item">
                         <a href={properties.doklink} target="_blank" >Plandokument</a>
                     </li>
@@ -159,5 +160,34 @@ module.exports = {
             })
         });
      //   console.log(searchTerm);
+    },
+
+    handleMouseOver: function(searchTerm){
+        let url = `http://gc2.frederiksberg.dk/api/v1/sql/frederiksberg?q=SELECT plannr, plannavn, doklink, 
+                   the_geom from job_plandatadk.lokalplan where planid =${searchTerm}&srs=4326`;
+            return new Promise(function(resolve, reject){
+                $.getJSON(url,function(data){
+                    let geom = data.features[0].geometry;
+                    let properties = data.features[0].properties;
+                    let layer = L.geoJson(geom,{
+                        "color": "blue",
+                        "weight": 1,
+                        "opacity": 1,
+                        "fillOpacity": 0.1,
+                        "dashArray": '5,3'
+                    });
+        
+                    layerGroup.clearLayers();
+                    layerGroup.addLayer(layer).addTo(mapObj);
+                    mapObj.fitBounds(layer.getBounds());
+                resolve('hello');
+            })
+        })
+    },
+
+    handleMouseOut: function(searchTerm){
+        return new Promise(function(resolve, reject){
+            resolve('hello');
+        })
     }
 }

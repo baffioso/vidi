@@ -19,7 +19,6 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 import SvgIcon from '@material-ui/core/SvgIcon';
-import Business from '@material-ui/icons/Business';
 
 var cloud;
 
@@ -99,6 +98,12 @@ module.exports = {
                     ],
 
                     "minimum_should_match": 1
+
+                    // "filter": [{
+                    //     "term": {
+                    //         "properties.meta.layer_search_include": true
+                    //     }
+                    // }]
                 }
             }
         };

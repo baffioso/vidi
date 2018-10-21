@@ -108,7 +108,7 @@ module.exports = {
 
         mainSearch.registerSearcher({
             key: 'Matrikel',
-            obj: {'searcher': this,'title':'Matrikler','icon':<LayerIcon/>}
+            obj: {'searcher': this,'title':'Matrikler', 'icon':<LayerIcon/>}
         });
     },
 
@@ -124,7 +124,7 @@ module.exports = {
             searchTerm = "a b c d e f g h i j k l m 1 2 3 4 5 6";
         }
         let url = "https://kortforsyningen.kms.dk/Geosearch?service=GEO&limit=100&resources=matrikelnumre"+
-                   "&area=muncode0147"+
+                   "&area=muncode0147%2Cmuncode0101"+
                    "&search="+ searchTerm +
                    "&login=magloire&password=Kort_1234";
 
@@ -143,7 +143,6 @@ module.exports = {
     },
 
     handleSearch: function(searchTerm){
-
         let me = this;
         let wkt = matrWkt[searchTerm];
         let geojson = wktParser.parse(wkt);
@@ -166,40 +165,48 @@ module.exports = {
         mapObj.setView(point, 17);
 
         return new Promise(function(resolve, reject){
-          
-            // let matrnr = searchTerm.split(", ")[0];
-            // let url = 'http://gc2.frederiksberg.dk/api/v2/elasticsearch/search/frederiksberg/elasticsearch/bbr_enhed';
-            // let query = `{
-            //     "query":{
-            //         "match":{
-            //             "properties.matrnr": "${matrnr}"
-            //         }
-            //     }
-            // }`
-
-            // $.post(url, query, function(data) {
-            //     let res = data.hits.hits.map((item) => {
-            //         let it = item['_source']['properties'];                     
-            //         return it
-            //     });
-
-            //     let comp =  <div> 
-            //         <h3>Matrikler</h3>
-            //         <SearchList items={res} searcher='matrikel'/>
-            //     </div>;
-                
-            //     resolve(comp);
-            // },'json'); 
-
             let data = [searchTerm];
             let comp = <div> 
                 <h3>Matrikler</h3>
                 <SearchList items={data} searcher='matrikel'/>
-            </div> 
+            </div>;
 
             let resultLayer = new L.FeatureGroup();
 
             resolve(comp);
         });
+    },
+
+    handleMouseOver: function(s){
+        return new Promise(function(resolve, reject){
+            console.log(s);
+            let wkt = matrWkt[s];
+            let geojson = wktParser.parse(wkt);
+            geojson = JSON.parse(JSON.stringify(geojson)); 
+            geojson = reproject.toWgs84(geojson, "from", crss);
+            let myLayer = L.geoJson(geojson,{
+                "color": "blue",
+                "weight": 1,
+                "opacity": 1,
+                "fillOpacity": 0.1,
+                "dashArray": '5,3'
+            });
+
+            layerGroup.clearLayers();
+            layerGroup.addLayer(myLayer).addTo(mapObj);
+            
+            /*  hack in order to center the map...   */ 
+            let point = geojson.coordinates[0][0];
+                point = [point[1],point[0]];
+            mapObj.setView(point, 16);
+            resolve('hello');
+        })
+    },
+
+    handleMouseOut: function(s){
+        return new Promise(function(resolve, reject){
+            console.log(s);
+            resolve('hello');
+        })
     }
 }
